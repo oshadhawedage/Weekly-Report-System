@@ -16,6 +16,8 @@ import ManagerDashboard from "../pages/manager/ManagerDashboard";
 import Reports from "../pages/manager/Reports";
 import Projects from "../pages/manager/Projects";
 
+import ProtectedRoute from "./ProtectedRoute";
+
 function AppRoutes() {
   return (
     <Routes>
@@ -26,7 +28,16 @@ function AppRoutes() {
       </Route>
 
       {/* Member */}
-      <Route path="/member" element={<MemberLayout />}>
+      <Route
+
+  path="/member"
+
+  element={
+     <ProtectedRoute allowedRoles={["MEMBER"]}>
+     <MemberLayout />
+    </ProtectedRoute>
+   }
+  >
         <Route path="dashboard" element={<MemberDashboard />} />
         <Route path="reports/new" element={<CreateReport />} />
         <Route path="reports" element={<ReportHistory />} />
@@ -34,7 +45,14 @@ function AppRoutes() {
       </Route>
 
       {/* Manager */}
-      <Route path="/manager" element={<ManagerLayout />}>
+      <Route
+        path="/manager"
+        element={
+          <ProtectedRoute allowedRoles={["MANAGER"]}>
+            <ManagerLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="dashboard" element={<ManagerDashboard />} />
         <Route path="reports" element={<Reports />} />
         <Route path="projects" element={<Projects />} />

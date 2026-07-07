@@ -3,7 +3,8 @@ import {
   createReport,
   getMyReports,
   getReportById,
-  updateReport
+  updateReport,
+  submitReport
 } from "../controllers/reportController.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -21,5 +22,8 @@ router.get("/:id", authMiddleware, getReportById);
 
 // update report
 router.put("/:id", authMiddleware, updateReport);
+
+// submit report
+router.patch("/:id/submit", authMiddleware, submitReport);
 
 export default router;

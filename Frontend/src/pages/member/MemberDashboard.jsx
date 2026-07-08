@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/common/Button";
 import { useAuth } from "../../context/AuthContext";
 import StatsCard from "../../components/dashboard/StatsCard";
 
@@ -51,12 +52,12 @@ function MemberDashboard(){
 
             </div>
 
-            <button
-            onClick={() => navigate("/member/reports/new")}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg"
+            <Button
+                onClick={() => navigate("/member/reports/new")}
+                size="lg"
             >
               Create Weekly Report
-           </button>
+           </Button>
 
 
         </div>

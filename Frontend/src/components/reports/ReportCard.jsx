@@ -1,5 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
+import Button from "../common/Button";
 import { submitReport } from "../../services/reportService";
 
 
@@ -120,12 +121,12 @@ function ReportCard({ report }) {
 
                 {
                  report.status === "DRAFT" && (
-                <button
+                <Button
                     onClick={() => navigate(`/member/reports/${report.id}/edit`)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded"
+                    variant="secondary"
                 >
                     Edit
-                </button>
+                </Button>
 
                 )
                 }
@@ -134,12 +135,12 @@ function ReportCard({ report }) {
                 {
                 report.status === "DRAFT" && (
 
-                <button
+                <Button
                     onClick={handleSubmitReport}
-                    className="px-4 py-2 bg-green-600 text-white rounded"
+                    variant="success"
                 >
                     Submit
-                </button>
+                </Button>
                 )
                 }
 

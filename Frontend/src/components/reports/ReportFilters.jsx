@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import Button from "../common/Button";
+import Input from "../common/Input";
 import { getProjects } from "../../services/projectService";
 import { getMembers } from "../../services/projectService";
 
@@ -109,15 +111,15 @@ function ReportFilters({ onFilter }) {
         >
 
 
-            <select
+            <Input
+
+                as="select"
 
                 name="userId"
 
                 value={filters.userId}
 
                 onChange={handleChange}
-
-                className="border p-2 rounded"
 
             >
 
@@ -142,20 +144,19 @@ function ReportFilters({ onFilter }) {
                 }
 
 
-            </select>
+            </Input>
 
 
 
+            <Input
 
-            <select
+                as="select"
 
                 name="projectId"
 
                 value={filters.projectId}
 
                 onChange={handleChange}
-
-                className="border p-2 rounded"
 
             >
 
@@ -180,12 +181,11 @@ function ReportFilters({ onFilter }) {
                 }
 
 
-            </select>
+            </Input>
 
 
 
-
-            <input
+            <Input
 
                 type="date"
 
@@ -195,13 +195,11 @@ function ReportFilters({ onFilter }) {
 
                 onChange={handleChange}
 
-                className="border p-2 rounded"
-
             />
 
 
 
-            <input
+            <Input
 
                 type="date"
 
@@ -211,35 +209,21 @@ function ReportFilters({ onFilter }) {
 
                 onChange={handleChange}
 
-                className="border p-2 rounded"
-
             />
 
 
 
-            <button
-
-                className="bg-blue-600 text-white rounded px-4 py-2"
-
-            >
-
+            <Button type="submit">
                 Filter
+            </Button>
 
-            </button>
-
-            <button
-
+            <Button
               type="button"
-
               onClick={handleReset}
-
-              className="bg-gray-500 text-white rounded px-4 py-2"
-
+              variant="secondary"
             >
-
                 Reset
-
-            </button>
+            </Button>
 
 
         </form>

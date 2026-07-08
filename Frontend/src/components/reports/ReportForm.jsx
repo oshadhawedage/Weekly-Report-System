@@ -1,4 +1,7 @@
 import { useEffect,useState } from "react";
+
+import Button from "../common/Button";
+import Input from "../common/Input";
 import { getMyProjects } from "../../services/projectService";
 
 
@@ -98,12 +101,11 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Week Start Date
                 </label>
 
-                <input
+                <Input
                     type="date"
                     name="weekStartDate"
                     value={formData.weekStartDate}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded"
                 />
 
             </div>
@@ -116,12 +118,11 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Week End Date
                 </label>
 
-                <input
+                <Input
                     type="date"
                     name="weekEndDate"
                     value={formData.weekEndDate}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded"
                 />
 
             </div>
@@ -134,12 +135,12 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Project 
                 </label>
 
-            <select
+            <Input
 
+                as="select"
                 name="projectId"
                 value={formData.projectId}
                 onChange={handleChange}
-                className="border p-2 w-full rounded"
             >
 
                  <option value="">
@@ -168,7 +169,7 @@ function ReportForm({ onSubmit, initialData = {}}) {
 
             }
 
-            </select>
+            </Input>
 
             </div>
 
@@ -180,11 +181,11 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Tasks Completed
                 </label>
 
-                <textarea
+                <Input
+                    as="textarea"
                     name="tasksCompleted"
                     value={formData.tasksCompleted}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded"
                 />
 
             </div>
@@ -197,11 +198,11 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Tasks Planned For Next Week
                 </label>
 
-                <textarea
+                <Input
+                    as="textarea"
                     name="tasksPlanned"
                     value={formData.tasksPlanned}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded"
                 />
 
             </div>
@@ -214,11 +215,11 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Blockers / Challenges
                 </label>
 
-                <textarea
+                <Input
+                    as="textarea"
                     name="blockers"
                     value={formData.blockers}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded"
                 />
 
             </div>
@@ -231,12 +232,11 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Hours Worked
                 </label>
 
-                <input
+                <Input
                     type="number"
                     name="hoursWorked"
                     value={formData.hoursWorked}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded"
                 />
 
             </div>
@@ -249,24 +249,20 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     Notes / Links
                 </label>
 
-                <textarea
+                <Input
+                    as="textarea"
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
-                    className="border p-2 w-full rounded"
                 />
 
             </div>
 
 
 
-            <button
-                className="bg-blue-600 text-white px-6 py-3 rounded"
-            >
-
+            <Button type="submit" size="lg">
                 Submit Report
-
-            </button>
+            </Button>
 
 
 

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
 import { loginUser } from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
 
@@ -96,12 +98,18 @@ function Login() {
 
     return (
 
-        <div className="w-full max-w-md bg-white p-8 rounded-xl shadow">
-
-
-            <h1 className="text-3xl font-bold mb-6 text-center">
-                Login
-            </h1>
+        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/70">
+            <div className="mb-6 flex flex-col items-center text-center">
+                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-500 to-violet-500 text-xl font-bold text-white shadow-lg shadow-indigo-200">
+                    WR
+                </div>
+                <h1 className="text-3xl font-bold text-slate-800">
+                    Welcome Back
+                </h1>
+                <p className="mt-2 text-sm text-slate-500">
+                    Sign in to your Weekly Report System account
+                </p>
+            </div>
 
 
 
@@ -123,7 +131,7 @@ function Login() {
             >
 
 
-                <input
+                <Input
 
                     name="email"
 
@@ -135,13 +143,11 @@ function Login() {
 
                     onChange={handleChange}
 
-                    className="w-full border p-3 rounded"
-
                 />
 
 
 
-                <input
+                <Input
 
                     name="password"
 
@@ -153,21 +159,17 @@ function Login() {
 
                     onChange={handleChange}
 
-                    className="w-full border p-3 rounded"
-
                 />
 
 
 
-                <button
-
-                    className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
-
+                <Button
+                    type="submit"
+                    fullWidth
+                    size="lg"
                 >
-
                     Login
-
-                </button>
+                </Button>
 
 
 

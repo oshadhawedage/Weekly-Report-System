@@ -1,5 +1,7 @@
 import { useEffect,useState } from "react";
 
+import Button from "../common/Button";
+import Input from "../common/Input";
 
 function ProjectForm({ onSubmit, initialData = null }) {
 
@@ -79,7 +81,7 @@ function ProjectForm({ onSubmit, initialData = null }) {
         >
 
 
-            <input
+            <Input
 
                 type="text"
 
@@ -91,13 +93,13 @@ function ProjectForm({ onSubmit, initialData = null }) {
 
                 onChange={handleChange}
 
-                className="border p-2 rounded w-full"
-
             />
 
 
 
-            <textarea
+            <Input
+
+                as="textarea"
 
                 name="description"
 
@@ -107,21 +109,13 @@ function ProjectForm({ onSubmit, initialData = null }) {
 
                 onChange={handleChange}
 
-                className="border p-2 rounded w-full"
-
             />
 
 
 
-            <button
-
-                className="bg-blue-600 text-white px-5 py-2 rounded"
-
-            >
-
+            <Button type="submit">
                 {initialData ? "Update Project" : "Add Project"}
-
-            </button>
+            </Button>
 
 
         </form>

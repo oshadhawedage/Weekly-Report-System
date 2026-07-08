@@ -1,7 +1,8 @@
 import express from "express";
 import {
   getAllReports,
-  getReportsByFilters
+  getReportsByFilters,
+  getDashboardStats
 } from "../controllers/managerController.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -12,6 +13,9 @@ const router = express.Router();
 // Only MANAGER can access everything here
 router.use(authMiddleware);
 router.use(roleMiddleware(["MANAGER"]));
+
+// Dashboard stats
+router.get("/dashboard", getDashboardStats);
 
 // Get all reports
 router.get("/reports", getAllReports);

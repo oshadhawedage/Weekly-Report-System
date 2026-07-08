@@ -22,3 +22,11 @@ export const getReportsByFilters = async (filters) => {
     return response.data;
 
 };
+
+export const getDashboardStats = async () => {
+
+    const response = await axios.get("/manager/dashboard");
+
+    return response.data;
+
+};

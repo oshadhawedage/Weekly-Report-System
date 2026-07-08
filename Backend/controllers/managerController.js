@@ -62,3 +62,51 @@ export const getReportsByFilters = async (req, res) => {
     res.status(500).json({ message: "Error filtering reports", error });
   }
 };
+
+export const getDashboardStats = async (req, res) => {
+  try {
+
+    const totalReports = await prisma.report.count();
+
+    const submittedReports = await prisma.report.count({
+      where: {
+        status: "SUBMITTED"
+      }
+    });
+
+    const pendingReports = await prisma.report.count({
+      where: {
+        status: "DRAFT"
+      }
+    });
+
+    const openBlockers = await prisma.report.count({
+      where: {
+        blockers: {
+          not: ""
+        }
+      }
+    });
+
+    const submissionRate =
+      totalReports === 0
+        ? 0
+        : Math.round((submittedReports / totalReports) * 100);
+
+    res.json({
+      totalReports,
+      submittedReports,
+      pendingReports,
+      submissionRate,
+      openBlockers
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Error loading dashboard",
+      error
+    });
+
+  }
+};

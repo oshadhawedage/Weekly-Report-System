@@ -1,5 +1,32 @@
 function ReportTable({ reports }) {
 
+    const getStatus = (report)=>{
+
+
+    if(report.status === "SUBMITTED"){
+
+        return "SUBMITTED";
+
+    }
+
+
+    const today = new Date();
+
+    const endDate = new Date(report.weekEndDate);
+
+
+
+    if(endDate < today){
+
+        return "LATE";
+
+    }
+
+
+    return "PENDING";
+
+};
+
     return (
 
         <div className="bg-white rounded-xl shadow overflow-x-auto">
@@ -35,82 +62,108 @@ function ReportTable({ reports }) {
                 </thead>
 
 
+                
+
+
                 <tbody>
 
-                    {
-                        reports.map((report)=>(
+{
+    reports.length === 0 ? (
 
-                            <tr 
-                                key={report.id}
-                                className="border-t"
-                            >
+        <tr>
 
-                                <td className="p-4">
+            <td
+                colSpan="5"
+                className="text-center p-6 text-gray-500"
+            >
 
-                                    {report.user?.name}
+                No reports found
 
-                                </td>
+            </td>
 
-
-                                <td className="p-4">
-
-                                    {report.project?.name}
-
-                                </td>
+        </tr>
 
 
-                                <td className="p-4">
-
-                                    {new Date(
-                                        report.weekStartDate
-                                    ).toLocaleDateString()}
-
-                                    {" - "}
-
-                                    {new Date(
-                                        report.weekEndDate
-                                    ).toLocaleDateString()}
-
-                                </td>
+    ) : (
 
 
-                                <td className="p-4">
+        reports.map((report)=>(
 
-                                    {report.hoursWorked ?? "-"} hrs
+            <tr
+                key={report.id}
+                className="border-t"
+            >
 
-                                </td>
-
-
-                                <td className="p-4">
-
-                                    <span
-                                        className={`
-                                            px-3 
-                                            py-1 
-                                            rounded-full 
-                                            text-sm
-                                            ${
-                                                report.status === "SUBMITTED"
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-yellow-100 text-yellow-700"
-                                            }
-                                        `}
-                                    >
-
-                                        {report.status}
-
-                                    </span>
-
-                                </td>
+                <td className="p-4">
+                    {report.user?.name}
+                </td>
 
 
-                            </tr>
+                <td className="p-4">
+                    {report.project?.name}
+                </td>
 
-                        ))
-                    }
+
+                <td className="p-4">
+
+                    {new Date(
+                        report.weekStartDate
+                    ).toLocaleDateString()}
+
+                    {" - "}
+
+                    {new Date(
+                        report.weekEndDate
+                    ).toLocaleDateString()}
+
+                </td>
 
 
-                </tbody>
+                <td className="p-4">
+
+                    {report.hoursWorked ?? "-"} hrs
+
+                </td>
+
+
+                <td className="p-4">
+
+                    <span
+                        className={`
+                            px-3 
+                            py-1 
+                            rounded-full 
+                            text-sm
+                            ${
+                                getStatus(report)==="SUBMITTED"
+                                ?
+                                "bg-green-100 text-green-700"
+                                :
+                                getStatus(report)==="LATE"
+                                ?
+                                "bg-red-100 text-red-700"
+                                :
+                                "bg-yellow-100 text-yellow-700"
+                            }
+                        `}
+                    >
+
+                        {getStatus(report)}
+
+                    </span>
+
+                </td>
+
+
+            </tr>
+
+        ))
+
+    )
+
+}
+
+</tbody>
 
 
             </table>

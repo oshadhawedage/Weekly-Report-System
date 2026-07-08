@@ -68,3 +68,140 @@ export const deleteProject = async (req, res) => {
   }
 };
 
+// GET ALL MEMBERS
+export const getMembers = async (req,res)=>{
+
+    try{
+
+        const users = await prisma.user.findMany({
+
+            where:{
+                role:"MEMBER"
+            },
+
+            select:{
+                id:true,
+                name:true,
+                email:true
+            }
+
+        });
+
+
+        res.json(users);
+
+
+    }catch(error){
+
+        res.status(500).json({
+            message:"Error fetching members",
+            error
+        });
+
+    }
+
+};
+
+// ASSIGN USERS TO PROJECT
+export const assignUsersToProject = async (req, res) => {
+
+    try {
+
+        const { id } = req.params; // project id
+
+        const { userIds } = req.body;
+
+
+        // create multiple relations
+
+        const assignments = userIds.map((userId)=>({
+
+            userId,
+
+            projectId:id
+
+        }));
+
+
+        await prisma.userProject.createMany({
+
+            data: assignments,
+
+            skipDuplicates:true
+
+        });
+
+
+        res.json({
+
+            message:"Users assigned successfully"
+
+        });
+
+
+    } catch(error){
+
+        console.error(error);
+
+        res.status(500).json({
+
+            message:"Error assigning users",
+
+            error
+
+        });
+
+    }
+
+};
+
+export const getMyProjects = async (req,res)=>{
+
+    try{
+
+        const userId = req.user.id;
+
+
+        const projects = await prisma.project.findMany({
+
+            where:{
+
+                users:{
+
+                    some:{
+
+                        userId
+
+                    }
+
+                }
+
+            },
+
+            orderBy:{
+
+                createdAt:"desc"
+
+            }
+
+        });
+
+
+        res.json(projects);
+
+
+    }catch(error){
+
+        console.error(error);
+
+        res.status(500).json({
+
+            message:"Error fetching user projects",
+
+            error
+
+        });
+
+    }
+
+};

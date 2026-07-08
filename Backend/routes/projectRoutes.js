@@ -3,7 +3,10 @@ import {
   createProject,
   getProjects,
   updateProject,
-  deleteProject
+  deleteProject,
+  getMembers,
+  assignUsersToProject,
+  getMyProjects
 } from "../controllers/projectController.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -13,18 +16,25 @@ const router = express.Router();
 
 // protect all project routes (MANAGER only)
 router.use(authMiddleware);
-router.use(roleMiddleware(["MANAGER"]));
 
-// create project
-router.post("/", createProject);
-
-// get all projects
+router.get("/members", getMembers);
+router.get("/my", getMyProjects);
 router.get("/", getProjects);
 
+
+// create project
+router.post("/", roleMiddleware(["MANAGER"]),createProject);
+
 // update project
-router.put("/:id", updateProject);
+router.put("/:id", roleMiddleware(["MANAGER"]), updateProject);
 
 // delete project
-router.delete("/:id", deleteProject);
+router.delete("/:id", roleMiddleware(["MANAGER"]), deleteProject);
+
+// assign users to project
+router.post("/:id/users", roleMiddleware(["MANAGER"]), assignUsersToProject);
+
+
+
 
 export default router;

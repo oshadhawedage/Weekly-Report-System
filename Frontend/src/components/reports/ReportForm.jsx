@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect,useState } from "react";
+import { getMyProjects } from "../../services/projectService";
 
 
 function ReportForm({ onSubmit, initialData = {}}) {
@@ -31,6 +32,31 @@ function ReportForm({ onSubmit, initialData = {}}) {
      notes: initialData.notes || ""
 
     });
+
+    const [projects,setProjects] = useState([]);
+
+    useEffect(()=>{
+
+         const fetchProjects = async()=>{
+
+          try{
+
+               const data = await getMyProjects();
+
+                setProjects(data);
+
+            }
+            catch(error){
+               console.log(error);
+            }
+
+        };
+
+
+        fetchProjects();
+
+
+    },[]);
 
 
 
@@ -105,17 +131,44 @@ function ReportForm({ onSubmit, initialData = {}}) {
             <div>
 
                 <label>
-                    Project ID
+                    Project 
                 </label>
 
-                <input
-                    type="text"
-                    name="projectId"
-                    value={formData.projectId}
-                    onChange={handleChange}
-                    placeholder="Select project later"
-                    className="border p-2 w-full rounded"
-                />
+            <select
+
+                name="projectId"
+                value={formData.projectId}
+                onChange={handleChange}
+                className="border p-2 w-full rounded"
+            >
+
+                 <option value="">
+
+                   Select Project
+
+                </option>
+
+            {
+
+                projects.map((project)=>(
+
+                <option
+
+                    key={project.id}
+
+                    value={project.id}
+
+                >
+
+                    {project.name}
+
+                </option>
+
+                ))
+
+            }
+
+            </select>
 
             </div>
 

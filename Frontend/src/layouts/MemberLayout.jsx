@@ -1,26 +1,22 @@
 import { Outlet } from "react-router-dom";
 
+import Navbar from "../components/common/Navbar";
+import Sidebar from "../components/common/Sidebar";
+
 function MemberLayout() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
 
-      {/* Navbar later */}
-      <header className="h-16 bg-white shadow">
-        Member Navbar
-      </header>
+      <Sidebar />
 
+      <div className="flex-1 flex flex-col">
 
-      <div className="flex">
+        <Navbar />
 
-        {/* Sidebar later */}
-        <aside className="w-64 min-h-screen bg-white shadow">
-          Member Sidebar
-        </aside>
-
-
-        {/* Page content */}
         <main className="flex-1 p-6">
+
           <Outlet />
+
         </main>
 
       </div>

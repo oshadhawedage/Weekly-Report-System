@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 
 import Navbar from "../components/common/Navbar";
 import Sidebar from "../components/common/Sidebar";
+import ChatWidget from "../components/ai/ChatWidget";
 
 function ManagerLayout() {
   return (
@@ -18,6 +19,8 @@ function ManagerLayout() {
           <Outlet />
 
         </main>
+
+        <ChatWidget />
 
       </div>
 

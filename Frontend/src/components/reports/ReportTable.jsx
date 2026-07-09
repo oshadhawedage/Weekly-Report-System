@@ -157,13 +157,13 @@ function ReportTable({ reports }) {
 
             </tr>
 
-        ))
+          ))
 
-    )
+      )
 
-}
+    }
 
-</tbody>
+    </tbody>
 
 
             </table>

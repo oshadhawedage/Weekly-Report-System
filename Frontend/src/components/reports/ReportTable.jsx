@@ -1,4 +1,6 @@
-function ReportTable({ reports }) {
+import Button from "../common/Button";
+
+function ReportTable({ reports, onView }) {
 
     const getStatus = (report)=>{
 
@@ -55,6 +57,10 @@ function ReportTable({ reports }) {
 
                         <th className="p-4 text-left">
                             Status
+                        </th>
+
+                        <th className="p-4 text-left">
+                            Actions
                         </th>
 
                     </tr>
@@ -153,6 +159,19 @@ function ReportTable({ reports }) {
                     </span>
 
                 </td>
+
+                <td className="p-4">
+
+                    <Button
+                        type="button"
+                        variant="primary"
+                        size="sm"
+                        onClick={()=>onView(report)}
+                    >
+                        View
+                    </Button>
+
+                 </td>
 
 
             </tr>

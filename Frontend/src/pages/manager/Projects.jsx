@@ -4,6 +4,7 @@ import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import ProjectCard from "../../components/projects/ProjectCard";
 import ProjectForm from "../../components/projects/ProjectForm";
+import AssignMembersModal from "../../components/projects/AssignMembersModal";
 
 import {
     getProjects,
@@ -86,7 +87,13 @@ function Projects(){
 
        setMembers(data);
 
-       setSelectedUsers([]);
+       const assignedIds = project.users.map(
+
+        item => item.userId
+
+        );
+
+      setSelectedUsers(assignedIds);
 
     };
 
@@ -133,79 +140,30 @@ function Projects(){
 
             </div>
 
-            {assignProject && (
+            <AssignMembersModal
 
-            <div className="bg-white p-6 rounded-xl shadow">
+                project={assignProject}
 
-                <h2 className="text-2xl font-bold mb-5">
+                members={members}
 
-                     Assign Members - {assignProject.name}
+                selectedUsers={selectedUsers}
 
-                </h2>
+                setSelectedUsers={setSelectedUsers}
 
-            <div className="space-y-3">
+                onClose={()=>setAssignProject(null)}
 
-            {members.map((member) => (
+                onSave={async()=>{
 
-                <label
-                    key={member.id}
-                    className="flex items-center gap-3"
-                >
+                    await assignUsersToProject(
+                    assignProject.id,
+                    selectedUsers
+                );
 
-                    <Input
-                       type="checkbox"
-                       checked={selectedUsers.includes(member.id)}
-                       onChange={() => {
+                setAssignProject(null);
 
-                            setSelectedUsers((prev) =>
+              }}
 
-                             prev.includes(member.id)
-
-                             ? prev.filter((id)=> id !== member.id)
-
-                             : [...prev, member.id]
-
-                            );
-
-                         }}
-                    />
-
-                    <span>
-
-                        {member.name} ({member.email})
-
-                    </span>
-
-                </label>
-
-            ))}
-
-            <Button
-
-                onClick={async()=>{
-
-                       await assignUsersToProject(
-                       assignProject.id,
-                       selectedUsers
-                    );
-
-                    setAssignProject(null);
-
-                }}
-
-                 className="mt-6 bg-blue-600 text-white px-5 py-2 rounded"
-
-            >
-
-               Save Members
-
-            </Button>
-
-        </div>
-
-    </div>
-)}
-
+            />
 
         </div>
 

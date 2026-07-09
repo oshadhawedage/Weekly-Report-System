@@ -4,12 +4,14 @@ import { getAllReports,getReportsByFilters } from "../../services/managerService
 
 import ReportFilters from "../../components/reports/ReportFilters";
 import ReportTable from "../../components/reports/ReportTable";
+import ReportModal from "../../components/reports/ReportModal";
 
 
 function Reports(){
 
     const [reports,setReports] = useState([]);
     const [loading,setLoading] = useState(true);
+    const [selectedReport,setSelectedReport] = useState(null);
 
 
 
@@ -86,7 +88,8 @@ function Reports(){
             </h1>
 
             <ReportFilters onFilter={handleFilter}/>
-            <ReportTable reports={reports}/>
+            <ReportTable reports={reports} onView={setSelectedReport}/>
+            <ReportModal report={selectedReport} onClose={()=>setSelectedReport(null)}/>
 
 
         </div>

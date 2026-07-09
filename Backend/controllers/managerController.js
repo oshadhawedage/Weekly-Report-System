@@ -34,11 +34,18 @@ export const getReportsByFilters = async (req, res) => {
     if (userId) filters.userId = userId;
     if (projectId) filters.projectId = projectId;
 
-    if (startDate && endDate) {
-      filters.weekStartDate = {
-        gte: new Date(startDate),
-        lte: new Date(endDate)
-      };
+    if (startDate || endDate) {
+
+      filters.weekStartDate = {};
+
+        if (startDate) {
+          filters.weekStartDate.gte = new Date(startDate);
+        }
+
+        if (endDate) {
+          filters.weekStartDate.lte = new Date(endDate);
+        }
+
     }
 
     const reports = await prisma.report.findMany({

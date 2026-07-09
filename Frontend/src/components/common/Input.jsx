@@ -10,13 +10,16 @@ const Input = forwardRef(function Input(
     },
     ref
 ) {
-    const baseClasses = "w-full rounded border border-slate-300 p-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    const baseClasses = "rounded border border-slate-300 p-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    const inputClasses = type === "checkbox" || type === "radio"
+        ? "h-4 w-4"
+        : "w-full";
 
     if (as === "textarea") {
         return (
             <textarea
                 ref={ref}
-                className={`${baseClasses} ${className}`.trim()}
+                className={`${baseClasses} w-full ${className}`.trim()}
                 {...props}
             />
         );
@@ -26,7 +29,7 @@ const Input = forwardRef(function Input(
         return (
             <select
                 ref={ref}
-                className={`${baseClasses} ${className}`.trim()}
+                className={`${baseClasses} w-full ${className}`.trim()}
                 {...props}
             >
                 {children}
@@ -38,7 +41,7 @@ const Input = forwardRef(function Input(
         <input
             ref={ref}
             type={type}
-            className={`${baseClasses} ${className}`.trim()}
+            className={`${baseClasses} ${inputClasses} ${className}`.trim()}
             {...props}
         />
     );

@@ -38,17 +38,42 @@ export const createReport = async (req, res) => {
 };
 export const getMyReports = async (req, res) => {
   try {
+
     const userId = req.user.id;
 
     const reports = await prisma.report.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" }
+
+      where: {
+        userId
+      },
+
+      include:{
+        project:{
+          select:{
+            name:true
+          }
+        }
+      },
+
+      orderBy:{
+        createdAt:"desc"
+      }
+
     });
 
+
     res.json(reports);
-  } catch (error) {
+
+
+  } catch(error){
+
     console.error(error);
-    res.status(500).json({ message: "Error fetching reports", error: error.message });
+
+    res.status(500).json({
+      message:"Error fetching reports",
+      error:error.message
+    });
+
   }
 };
 

@@ -21,15 +21,52 @@ export const createProject = async (req, res) => {
 // GET ALL PROJECTS
 export const getProjects = async (req, res) => {
   try {
+
     const projects = await prisma.project.findMany({
+
+      include: {
+
+        users: {
+
+          include: {
+
+            user: {
+
+              select: {
+
+                id: true,
+                name: true,
+                email: true
+
+              }
+
+            }
+
+          }
+
+        }
+
+      },
+
       orderBy: {
         createdAt: "desc"
       }
+
     });
 
+
     res.json(projects);
+
+
   } catch (error) {
-    res.status(500).json({ message: "Error fetching projects", error });
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error fetching projects",
+      error
+    });
+
   }
 };
 
@@ -107,13 +144,23 @@ export const assignUsersToProject = async (req, res) => {
 
     try {
 
-        const { id } = req.params; // project id
+        const { id } = req.params;
 
         const { userIds } = req.body;
 
 
-        // create multiple relations
+        // Remove old assignments
+        await prisma.userProject.deleteMany({
 
+            where:{
+                projectId:id
+            }
+
+        });
+
+
+
+        // Create new assignments
         const assignments = userIds.map((userId)=>({
 
             userId,
@@ -123,18 +170,20 @@ export const assignUsersToProject = async (req, res) => {
         }));
 
 
-        await prisma.userProject.createMany({
+        if(assignments.length > 0){
 
-            data: assignments,
+            await prisma.userProject.createMany({
 
-            skipDuplicates:true
+                data: assignments
 
-        });
+            });
+
+        }
 
 
         res.json({
 
-            message:"Users assigned successfully"
+            message:"Project members updated successfully"
 
         });
 
@@ -145,7 +194,7 @@ export const assignUsersToProject = async (req, res) => {
 
         res.status(500).json({
 
-            message:"Error assigning users",
+            message:"Error updating project members",
 
             error
 

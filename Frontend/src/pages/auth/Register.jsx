@@ -20,15 +20,26 @@ function Register() {
 
 
     const [error, setError] = useState("");
-
+    const [fieldErrors, setFieldErrors] = useState({
+        name: "",
+        email: "",
+        password: "",
+        role: ""
+    });
 
 
     const handleChange = (e)=>{
 
-        setFormData({
-            ...formData,
+        setFormData((prev)=>({
+            ...prev,
             [e.target.name]: e.target.value
-        });
+        }));
+
+        setFieldErrors((prev)=>({
+            ...prev,
+            [e.target.name]: ""
+        }));
+        setError("");
 
     };
 
@@ -38,9 +49,47 @@ function Register() {
 
         e.preventDefault();
 
+        const errors = {};
+
+        if (!formData.name.trim()) {
+            errors.name = "Name is required";
+        }
+
+        if (!formData.email.trim()) {
+            errors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            errors.email = "Enter a valid email address";
+        }
+
+        if (!formData.password) {
+            errors.password = "Password is required";
+        } else if (formData.password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
+        }
+
+        if (!formData.role) {
+            errors.role = "Role is required";
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            setError("");
+            return;
+        }
+
         try{
 
-            await registerUser(formData);
+            await registerUser({
+
+              name: formData.name.trim(),
+
+              email: formData.email.trim(),
+
+              password: formData.password,
+
+              role: formData.role
+
+            });
 
             navigate("/");
 
@@ -88,31 +137,52 @@ function Register() {
             >
 
 
-                <Input
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                />
+                <div>
+                    <Input
+                        name="name"
+                        placeholder="Name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.name)}
+                    />
+                    {fieldErrors.name && (
+                        <p className="text-sm text-red-500 mt-1">
+                            {fieldErrors.name}
+                        </p>
+                    )}
+                </div>
 
+                <div>
+                    <Input
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.email)}
+                    />
+                    {fieldErrors.email && (
+                        <p className="text-sm text-red-500 mt-1">
+                            {fieldErrors.email}
+                        </p>
+                    )}
+                </div>
 
-                <Input
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-
-
-
-                <Input
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
+                <div>
+                    <Input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.password)}
+                    />
+                    {fieldErrors.password && (
+                        <p className="text-sm text-red-500 mt-1">
+                            {fieldErrors.password}
+                        </p>
+                    )}
+                </div>
 
 
 
@@ -121,6 +191,7 @@ function Register() {
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.role)}
                 >
 
                     <option value="MEMBER">
@@ -134,7 +205,11 @@ function Register() {
 
                 </Input>
 
-
+                {fieldErrors.role && (
+                    <p className="text-sm text-red-500 mt-1">
+                        {fieldErrors.role}
+                    </p>
+                )}
 
                 <Button
                     type="submit"

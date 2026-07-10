@@ -1,6 +1,18 @@
+import React, { useState } from "react";
 import Button from "../common/Button";
+import ConfirmDialog from "../common/ConfirmDialog";
 
 function ProjectCard({ project, onEdit, onAssign, onDelete }) {
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleDeleteClick = () => setShowConfirm(true);
+  const handleConfirm = () => {
+    onDelete(project.id);
+    setShowConfirm(false);
+  };
+
+  const handleCancel = () => setShowConfirm(false);
+
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-500 via-indigo-500 to-violet-500" />
@@ -36,10 +48,20 @@ function ProjectCard({ project, onEdit, onAssign, onDelete }) {
           Assign Members
         </Button>
 
-        <Button onClick={() => onDelete(project.id)} variant="danger" className="shrink-0">
+        <Button onClick={handleDeleteClick} variant="danger" className="shrink-0">
           Delete
         </Button>
       </div>
+      
+      <ConfirmDialog
+        open={showConfirm}
+        title={`Delete project "${project.name}"`}
+        message="This action cannot be undone. Are you sure you want to delete this project and all related data?"
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }

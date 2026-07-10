@@ -16,16 +16,56 @@ export const createReport = async (req, res) => {
       notes
     } = req.body;
 
+    if (!projectId || !projectId.trim()) {
+      return res.status(400).json({ message: "Project selection is required" });
+    }
+
+    if (!weekStartDate || !weekStartDate.trim()) {
+      return res.status(400).json({ message: "Week start date is required" });
+    }
+
+    if (!weekEndDate || !weekEndDate.trim()) {
+      return res.status(400).json({ message: "Week end date is required" });
+    }
+
+    if (!tasksCompleted || !tasksCompleted.trim()) {
+      return res.status(400).json({ message: "Completed tasks are required" });
+    }
+
+    if (!tasksPlanned || !tasksPlanned.trim()) {
+      return res.status(400).json({ message: "Planned tasks are required" });
+    }
+
+    const parsedStart = new Date(weekStartDate);
+    const parsedEnd = new Date(weekEndDate);
+
+    if (Number.isNaN(parsedStart.getTime()) || Number.isNaN(parsedEnd.getTime())) {
+      return res.status(400).json({ message: "Invalid week dates provided" });
+    }
+
+    if (parsedEnd < parsedStart) {
+      return res.status(400).json({ message: "Week end date cannot come before the start date" });
+    }
+
+    const parsedHours = Number(hoursWorked);
+    if (hoursWorked === undefined || hoursWorked === null || hoursWorked === "" || Number.isNaN(parsedHours)) {
+      return res.status(400).json({ message: "Hours worked is required and must be a number" });
+    }
+
+    if (parsedHours < 0) {
+      return res.status(400).json({ message: "Hours worked cannot be negative" });
+    }
+
     const report = await prisma.report.create({
       data: {
         userId,
         projectId,
-        weekStartDate: new Date(weekStartDate),
-        weekEndDate: new Date(weekEndDate),
+        weekStartDate: parsedStart,
+        weekEndDate: parsedEnd,
         tasksCompleted,
         tasksPlanned,
         blockers,
-        hoursWorked: hoursWorked ? Number(hoursWorked) : null,
+        hoursWorked: parsedHours,
         notes
       }
     });

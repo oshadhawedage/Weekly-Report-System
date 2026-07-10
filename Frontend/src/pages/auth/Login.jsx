@@ -23,18 +23,27 @@ function Login() {
 
 
     const [error,setError] = useState("");
-
+    const [fieldErrors, setFieldErrors] = useState({
+        email: "",
+        password: ""
+    });
 
 
     const handleChange = (e)=>{
 
-        setFormData({
+        setFormData((prev)=>({
 
-            ...formData,
+            ...prev,
 
             [e.target.name]:e.target.value
 
-        });
+        }));
+
+        setFieldErrors((prev)=>({
+            ...prev,
+            [e.target.name]: ""
+        }));
+        setError("");
 
     };
 
@@ -44,10 +53,32 @@ function Login() {
 
         e.preventDefault();
 
+        const errors = {};
+
+        if (!formData.email.trim()) {
+            errors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            errors.email = "Enter a valid email address";
+        }
+
+        if (!formData.password) {
+            errors.password = "Password is required";
+        } else if (formData.password.length < 6) {
+            errors.password = "Password must be at least 6 characters";
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            setError("");
+            return;
+        }
 
         try{
 
-            const response = await loginUser(formData);
+            const response = await loginUser({
+                email: formData.email.trim(),
+                password: formData.password
+            });
 
 
             const {
@@ -131,35 +162,37 @@ function Login() {
             >
 
 
-                <Input
+                <div>
+                    <Input
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.email)}
+                    />
+                    {fieldErrors.email && (
+                        <p className="text-sm text-red-500 mt-1">
+                            {fieldErrors.email}
+                        </p>
+                    )}
+                </div>
 
-                    name="email"
-
-                    type="email"
-
-                    placeholder="Email"
-
-                    value={formData.email}
-
-                    onChange={handleChange}
-
-                />
-
-
-
-                <Input
-
-                    name="password"
-
-                    type="password"
-
-                    placeholder="Password"
-
-                    value={formData.password}
-
-                    onChange={handleChange}
-
-                />
+                <div>
+                    <Input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        aria-invalid={Boolean(fieldErrors.password)}
+                    />
+                    {fieldErrors.password && (
+                        <p className="text-sm text-red-500 mt-1">
+                            {fieldErrors.password}
+                        </p>
+                    )}
+                </div>
 
 
 

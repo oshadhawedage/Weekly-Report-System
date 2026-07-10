@@ -1,30 +1,30 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../common/Button";
+import ConfirmDialog from "../common/ConfirmDialog";
 import { submitReport } from "../../services/reportService";
 
 
 function ReportCard({ report }) {
-
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmitReport = async () => {
+        try {
+            await submitReport(report.id);
+            window.location.reload();
+        } catch(error){
+            console.log(
+                error.response?.data || error.message
+            );
+        }
+    };
 
-    try {
-
-        await submitReport(report.id);
-
-        window.location.reload();
-
-    } catch(error){
-
-        console.log(
-            error.response?.data || error.message
-        );
-
-    }
-
-  };
+    const handleConfirmSubmit = () => {
+        setConfirmOpen(false);
+        handleSubmitReport();
+    };
 
 
     return (
@@ -136,7 +136,7 @@ function ReportCard({ report }) {
                 report.status === "DRAFT" && (
 
                 <Button
-                    onClick={handleSubmitReport}
+                    onClick={() => setConfirmOpen(true)}
                     variant="success"
                 >
                     Submit
@@ -146,6 +146,15 @@ function ReportCard({ report }) {
 
             </div>
 
+         <ConfirmDialog
+           open={confirmOpen}
+           title="Submit report"
+           message="Once submitted, this report cannot be edited or undone. Do you want to proceed?"
+           confirmLabel="Submit"
+           cancelLabel="Cancel"
+           onConfirm={handleConfirmSubmit}
+           onCancel={() => setConfirmOpen(false)}
+         />
 
          </div>
 

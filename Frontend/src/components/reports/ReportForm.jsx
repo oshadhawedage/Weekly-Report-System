@@ -5,38 +5,45 @@ import Input from "../common/Input";
 import { getMyProjects } from "../../services/projectService";
 
 
-function ReportForm({ onSubmit, initialData = {}}) {
-
+function ReportForm({ onSubmit, initialData = null}) {
 
     const [formData, setFormData] = useState({
 
-     projectId: initialData.projectId || "",
+     projectId: initialData?.projectId || "",
 
-     weekStartDate: initialData.weekStartDate
+     weekStartDate: initialData?.weekStartDate
 
         ? initialData.weekStartDate.slice(0,10)
 
         : "",
 
-     weekEndDate: initialData.weekEndDate
+     weekEndDate: initialData?.weekEndDate
 
         ? initialData.weekEndDate.slice(0,10)
 
         : "",
 
-     tasksCompleted: initialData.tasksCompleted || "",
+     tasksCompleted: initialData?.tasksCompleted || "",
 
-     tasksPlanned: initialData.tasksPlanned || "",
+     tasksPlanned: initialData?.tasksPlanned || "",
 
-     blockers: initialData.blockers || "",
+     blockers: initialData?.blockers || "",
 
-     hoursWorked: initialData.hoursWorked || "",
+     hoursWorked: initialData?.hoursWorked || "",
 
-     notes: initialData.notes || ""
+     notes: initialData?.notes || ""
 
     });
 
     const [projects,setProjects] = useState([]);
+    const [fieldErrors,setFieldErrors] = useState({
+        weekStartDate: "",
+        weekEndDate: "",
+        projectId: "",
+        tasksCompleted: "",
+        tasksPlanned: "",
+        hoursWorked: ""
+    });
 
     useEffect(()=>{
 
@@ -65,13 +72,18 @@ function ReportForm({ onSubmit, initialData = {}}) {
 
     const handleChange = (e)=>{
 
-        setFormData({
+        setFormData((prev) => ({
 
-            ...formData,
+            ...prev,
 
             [e.target.name]: e.target.value
 
-        });
+        }));
+
+        setFieldErrors((prev) => ({
+            ...prev,
+            [e.target.name]: ""
+        }));
 
     };
 
@@ -81,8 +93,62 @@ function ReportForm({ onSubmit, initialData = {}}) {
 
         e.preventDefault();
 
-        onSubmit(formData);
+        const errors = {};
 
+        if (!formData.weekStartDate) {
+            errors.weekStartDate = "Start date is required";
+        }
+
+        if (!formData.weekEndDate) {
+            errors.weekEndDate = "End date is required";
+        }
+
+        if (formData.weekStartDate && formData.weekEndDate) {
+            const start = new Date(formData.weekStartDate);
+            const end = new Date(formData.weekEndDate);
+            if (end < start) {
+                errors.weekEndDate = "End date cannot come before start date";
+            }
+        }
+
+        if (!formData.projectId) {
+            errors.projectId = "Project selection is required";
+        }
+
+        if (!formData.tasksCompleted.trim()) {
+            errors.tasksCompleted = "Describe completed tasks";
+        }
+
+        if (!formData.tasksPlanned.trim()) {
+            errors.tasksPlanned = "Describe planned tasks";
+        }
+
+        if (formData.hoursWorked === "" || formData.hoursWorked === null) {
+            errors.hoursWorked = "Hours worked is required";
+        } else if (Number.isNaN(Number(formData.hoursWorked))) {
+            errors.hoursWorked = "Hours worked must be a number";
+        } else if (Number(formData.hoursWorked) < 0) {
+            errors.hoursWorked = "Hours worked cannot be negative";
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
+            return;
+        }
+
+        const submissionData = {
+            ...formData,
+            projectId: formData.projectId.trim(),
+            weekStartDate: formData.weekStartDate.trim(),
+            weekEndDate: formData.weekEndDate.trim(),
+            tasksCompleted: formData.tasksCompleted.trim(),
+            tasksPlanned: formData.tasksPlanned.trim(),
+            blockers: formData.blockers.trim(),
+            notes: formData.notes.trim(),
+            hoursWorked: Number(formData.hoursWorked)
+        };
+
+        onSubmit(submissionData);
     };
 
 
@@ -106,7 +172,14 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     name="weekStartDate"
                     value={formData.weekStartDate}
                     onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.weekStartDate)}
+                    required
                 />
+                {fieldErrors.weekStartDate && (
+                    <p className="text-sm text-red-500 mt-1">
+                        {fieldErrors.weekStartDate}
+                    </p>
+                )}
 
             </div>
 
@@ -123,7 +196,14 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     name="weekEndDate"
                     value={formData.weekEndDate}
                     onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.weekEndDate)}
+                    required
                 />
+                {fieldErrors.weekEndDate && (
+                    <p className="text-sm text-red-500 mt-1">
+                        {fieldErrors.weekEndDate}
+                    </p>
+                )}
 
             </div>
 
@@ -141,6 +221,8 @@ function ReportForm({ onSubmit, initialData = {}}) {
                 name="projectId"
                 value={formData.projectId}
                 onChange={handleChange}
+                aria-invalid={Boolean(fieldErrors.projectId)}
+                required
             >
 
                  <option value="">
@@ -170,7 +252,11 @@ function ReportForm({ onSubmit, initialData = {}}) {
             }
 
             </Input>
-
+            {fieldErrors.projectId && (
+                <p className="text-sm text-red-500 mt-1">
+                    {fieldErrors.projectId}
+                </p>
+            )}
             </div>
 
 
@@ -186,7 +272,13 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     name="tasksCompleted"
                     value={formData.tasksCompleted}
                     onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.tasksCompleted)}
                 />
+                {fieldErrors.tasksCompleted && (
+                    <p className="text-sm text-red-500 mt-1">
+                        {fieldErrors.tasksCompleted}
+                    </p>
+                )}
 
             </div>
 
@@ -203,7 +295,13 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     name="tasksPlanned"
                     value={formData.tasksPlanned}
                     onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.tasksPlanned)}
                 />
+                {fieldErrors.tasksPlanned && (
+                    <p className="text-sm text-red-500 mt-1">
+                        {fieldErrors.tasksPlanned}
+                    </p>
+                )}
 
             </div>
 
@@ -237,7 +335,15 @@ function ReportForm({ onSubmit, initialData = {}}) {
                     name="hoursWorked"
                     value={formData.hoursWorked}
                     onChange={handleChange}
+                    aria-invalid={Boolean(fieldErrors.hoursWorked)}
+                    min="0"
+                    required
                 />
+                {fieldErrors.hoursWorked && (
+                    <p className="text-sm text-red-500 mt-1">
+                        {fieldErrors.hoursWorked}
+                    </p>
+                )}
 
             </div>
 
@@ -260,11 +366,13 @@ function ReportForm({ onSubmit, initialData = {}}) {
 
 
 
-            <Button type="submit" size="lg">
-                Submit Report
-            </Button>
-
-
+           <Button type="submit" size="lg">
+              {
+                initialData
+                ? "Update Report"
+                : "Create Report"
+              }
+           </Button>
 
         </form>
 

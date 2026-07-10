@@ -95,12 +95,21 @@ export const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await prisma.project.delete({
-      where: { id }
-    });
+    await prisma.$transaction([
+      prisma.report.deleteMany({
+        where: { projectId: id }
+      }),
+      prisma.userProject.deleteMany({
+        where: { projectId: id }
+      }),
+      prisma.project.delete({
+        where: { id }
+      })
+    ]);
 
     res.json({ message: "Project deleted successfully" });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error deleting project", error });
   }
 };
